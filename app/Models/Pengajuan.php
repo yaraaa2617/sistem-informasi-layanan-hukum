@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Pengajuan extends Model
+{
+    protected $table = 'pengajuan';
+
+    protected $fillable = [
+
+    'user_id',
+    'layanan',
+    'nama',
+    'status',
+    'dokumen',
+    'tanggal_pengajuan',
+
+    'nama_penjual',
+    'telepon_penjual',
+
+    'nama_pembeli',
+    'telepon_pembeli',
+
+    'telepon_pemohon',
+
+    'catatan_admin',
+
+    'file_surat',
+    'progress',
+];
+
+    /*
+    |--------------------------------------------------------------------------
+    | CASTING
+    |--------------------------------------------------------------------------
+    | biar field dokumen otomatis jadi array (JSON)
+    */
+    protected $casts = [
+        'dokumen' => 'array',
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELASI USER
+    |--------------------------------------------------------------------------
+    */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}
