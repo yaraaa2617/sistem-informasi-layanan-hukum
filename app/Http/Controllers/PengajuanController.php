@@ -71,6 +71,8 @@ class PengajuanController extends Controller
 
         'user_id' => auth()->id(),
 
+        'layanan_id' => 1,
+
         'layanan' => 'Akta Jual Beli',
 
         'nama' => $request->nama_pembeli,
@@ -185,6 +187,8 @@ public function storeHibah(Request $request)
 
         'user_id' => auth()->id(),
 
+        'layanan_id' => 2,
+
         'layanan' => 'Akta Hibah',
 
         'nama' => $request->nama_penerima,
@@ -280,6 +284,8 @@ public function storeWarisan(Request $request)
     Pengajuan::create([
 
         'user_id' => auth()->id(),
+
+        'layanan_id' => 3,
 
         'layanan' => 'Akta Warisan',
 
@@ -378,6 +384,8 @@ public function storeWarisan(Request $request)
     Pengajuan::create([
 
         'user_id' => auth()->id(),
+
+        'layanan_id' => 4,
 
         'layanan' => 'APHB',
 

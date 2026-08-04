@@ -15,27 +15,29 @@ return new class extends Migration
 
             $table->id();
 
-            // User yg mengajukan
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+$table->foreignId('user_id')
+      ->constrained()
+      ->onDelete('cascade');
 
-            // Nama layanan
-            $table->string('layanan');
 
-            // Nama pemohon
-            $table->string('nama');
+// Relasi ke tabel layanan
+$table->foreignId('layanan_id')
+      ->constrained('layanans')
+      ->onDelete('cascade');
 
-            // Upload dokumen
-            $table->string('dokumen');
 
-            // Status
-            $table->enum('status', [
-                'pending',
-                'diproses',
-                'dipanggil',
-                'selesai'
-            ])->default('pending');
+$table->string('nama');
 
-            $table->timestamps();
+$table->longText('dokumen')->change();
+
+$table->enum('status', [
+    'pending',
+    'diproses',
+    'dipanggil',
+    'selesai'
+])->default('pending');
+
+$table->timestamps();
 
         });
     }

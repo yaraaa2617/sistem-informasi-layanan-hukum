@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PengajuanController;
+use App\Http\Controllers\LayananController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,8 @@ Route::get('/', function () {
 })->name('home');
 
 Route::view('/profile', 'profile.index')->name('profile');
-Route::view('/layanan', 'layanan.index')->name('layanan');
+Route::get('/layanan', [LayananController::class, 'index'])
+    ->name('layanan');
 
 /*
 |--------------------------------------------------------------------------
@@ -347,6 +349,10 @@ Route::get('/user/surat/{id}/download',
 Route::get('/admin/pengajuan/{id}/surat',
     [PengajuanController::class, 'previewSurat']
 )->name('admin.surat.create');
+
+// Kelola Layanan Admin
+Route::resource('/admin/layanan', LayananController::class)
+    ->names('admin.layanan');
 
        /*
     |--------------------------------------------------------------------------

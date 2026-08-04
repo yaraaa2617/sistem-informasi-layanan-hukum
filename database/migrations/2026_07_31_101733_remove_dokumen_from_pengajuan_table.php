@@ -6,21 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::table('pengajuan', function (Blueprint $table) {
-
-            // isi perubahan tabel pengajuan di sini
-
-        });
+    $table->dropColumn('dokumen');
+});
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::table('pengajuan', function (Blueprint $table) {
-
-            // rollback perubahan pengajuan
-
+            //
         });
     }
 };

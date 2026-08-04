@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Layanan extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'nama_layanan',
+        'deskripsi',
+        'persyaratan',
+    ];
+
+    public function pengajuan()
+    {
+        return $this->hasMany(Pengajuan::class);
+    }
 }

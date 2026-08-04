@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Layanan;
+use App\Models\Dokumen;
 
 class Pengajuan extends Model
 {
@@ -10,44 +12,54 @@ class Pengajuan extends Model
 
     protected $fillable = [
 
-    'user_id',
-    'layanan',
-    'nama',
-    'status',
-    'dokumen',
-    'tanggal_pengajuan',
+        'user_id',
+        'layanan_id',
 
-    'nama_penjual',
-    'telepon_penjual',
+        'nama',
+        'status',
+        'tanggal_pengajuan',
 
-    'nama_pembeli',
-    'telepon_pembeli',
+        'nama_penjual',
+        'telepon_penjual',
 
-    'telepon_pemohon',
+        'nama_pembeli',
+        'telepon_pembeli',
 
-    'catatan_admin',
+        'telepon_pemohon',
 
-    'file_surat',
-    'progress',
-];
+        'catatan_admin',
 
-    /*
-    |--------------------------------------------------------------------------
-    | CASTING
-    |--------------------------------------------------------------------------
-    | biar field dokumen otomatis jadi array (JSON)
-    */
-    protected $casts = [
-        'dokumen' => 'array',
+        'file_surat',
+        'progress',
+
     ];
 
+
     /*
-    |--------------------------------------------------------------------------
+    |------------------------------------------------------------------
     | RELASI USER
-    |--------------------------------------------------------------------------
+    |------------------------------------------------------------------
     */
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+
+    /*
+    |------------------------------------------------------------------
+    | RELASI LAYANAN
+    |------------------------------------------------------------------
+    */
+
+    public function layanan()
+    {
+        return $this->belongsTo(Layanan::class);
+    }
+
+    public function dokumen()
+{
+    return $this->hasMany(Dokumen::class);
+}
 }
