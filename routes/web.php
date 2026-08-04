@@ -7,6 +7,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\LayananController;
+use App\Http\Controllers\NotarisController;
+use App\Http\Controllers\DokumenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,15 +71,19 @@ Route::get('/login', [AuthController::class, 'loginForm'])
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/dashboard', function () {
+Route::get('/dashboard', function () {
 
-        if (auth()->user()->role == 'admin') {
-            return redirect('/admin');
-        }
+    if (auth()->user()->role == 'admin') {
+        return redirect()->route('admin');
+    }
 
-        return redirect('/user/dashboard');
+    if (auth()->user()->role == 'notaris') {
+        return redirect()->route('notaris.dashboard');
+    }
 
-    })->name('dashboard');
+    return redirect()->route('user.dashboard');
+
+})->name('dashboard');
 
 });
 
@@ -177,6 +183,20 @@ Route::get('/user/dashboard', function () {
     )->name('aphb.store');
 
     /*
+|--------------------------------------------------------------------------
+| UPLOAD DOKUMEN
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/user/upload-dokumen/{id}',
+    [DokumenController::class, 'create']
+)->name('user.upload.dokumen');
+
+Route::post('/user/upload-dokumen/{id}',
+    [DokumenController::class, 'store']
+)->name('user.upload.dokumen.store');
+
+    /*
     |--------------------------------------------------------------------------
     | USER MENU
     |--------------------------------------------------------------------------
@@ -192,10 +212,11 @@ Route::get('/user/histori', function (Illuminate\Http\Request $request) {
 
     $tahun = $request->tahun ?? date('Y');
 
-    $pengajuan = App\Models\Pengajuan::where('user_id', auth()->id())
-        ->whereYear('tanggal_pengajuan', $tahun)
-        ->latest()
-        ->get();
+ $pengajuan = App\Models\Pengajuan::with('dokumen')
+    ->where('user_id', auth()->id())
+    ->whereYear('tanggal_pengajuan', $tahun)
+    ->latest()
+    ->get();
 
     return view('user.histori', compact('pengajuan', 'tahun'));
 
@@ -239,6 +260,26 @@ Route::put('/user/pengajuan/{id}',
     Route::delete('/user-profile',
         [ProfileController::class, 'destroy']
     )->name('profile.destroy');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| NOTARIS
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/notaris', [NotarisController::class, 'index'])
+        ->name('notaris.dashboard');
+
+    Route::get('/notaris/pengajuan', [NotarisController::class, 'pengajuan'])
+        ->name('notaris.pengajuan');
+
+    Route::get('/notaris/pengajuan/{id}',
+        [NotarisController::class, 'show'])
+        ->name('notaris.pengajuan.show');
 
 });
 
@@ -409,6 +450,7 @@ Route::resource('/admin/layanan', LayananController::class)
             ->get();
 
     })->name('admin.grafik.detail');
+    
 });
 
 require __DIR__.'/auth.php';

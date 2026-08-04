@@ -23,7 +23,7 @@ class AuthenticatedSessionController extends Controller
      /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+public function store(LoginRequest $request): RedirectResponse
 {
     $request->authenticate();
 
@@ -31,12 +31,15 @@ class AuthenticatedSessionController extends Controller
 
     // ADMIN
     if (auth()->user()->role === 'admin') {
-
         return redirect('/admin');
-
     }
 
-    // USER
+    // NOTARIS
+    if (auth()->user()->role === 'notaris') {
+        return redirect('/notaris');
+    }
+
+    // USER / KLIEN
     return redirect('/user/dashboard');
 }
 

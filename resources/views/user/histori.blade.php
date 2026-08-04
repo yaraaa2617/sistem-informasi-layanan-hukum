@@ -68,7 +68,7 @@
     </td>
 
     <td class="p-4">
-        {{ $item->layanan }}
+        {{ $item->layanan->nama_layanan ?? '-' }}
     </td>
 
     <td class="p-4">
@@ -101,6 +101,27 @@
                class="inline-block mt-2 bg-yellow-500 text-white px-3 py-1 rounded">
                 Perbaiki Dokumen
             </a>
+
+            @elseif($item->status == 'disetujui')
+
+    <span class="text-green-600 font-bold">
+        Disetujui
+    </span>
+
+   @if($item->dokumen->isNotEmpty())
+
+    <span class="inline-block mt-2 text-blue-600 font-semibold">
+        ✔ Dokumen sudah diupload
+    </span>
+
+@else
+
+    <a href="{{ route('user.upload.dokumen', $item->id) }}"
+       class="inline-block mt-2 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg">
+        Upload Dokumen
+    </a>
+
+@endif
 
         @elseif($item->status == 'diproses')
 

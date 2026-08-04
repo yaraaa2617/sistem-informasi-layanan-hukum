@@ -139,7 +139,7 @@
                 </td>
 
                 <td class="p-5">
-                    {{ $item->layanan }}
+                    {{ $item->layanan->nama_layanan ?? '-' }}
                 </td>
 
                 <td class="p-5">

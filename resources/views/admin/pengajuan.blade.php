@@ -31,7 +31,7 @@
         </td>
 
         <td class="p-4">
-            {{ $item->layanan }}
+            {{ $item->layanan->nama_layanan ?? '-' }}
         </td>
 
         <td class="p-4">
@@ -46,6 +46,12 @@
 
                 <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-semibold">
                     Revisi Dokumen
+                 </span>
+
+                 @elseif($item->status == 'disetujui')
+
+                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-semibold">
+                    Disetujui
                  </span>
 
             @elseif($item->status == 'diproses')
@@ -93,6 +99,8 @@
                class="bg-[#6B3F2A] hover:bg-[#4E342E] text-white px-4 py-2 rounded-xl transition">
                 Lihat
             </a>
+
+            
         </td>
 
     </tr>

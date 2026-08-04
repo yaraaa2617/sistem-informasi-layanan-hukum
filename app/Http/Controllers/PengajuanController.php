@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pengajuan;
+use App\Models\Dokumen;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PengajuanController extends Controller
@@ -23,57 +24,55 @@ class PengajuanController extends Controller
             'telepon_penjual' => 'required',
             'tanggal_pengajuan' => 'required|date',
 
-            'ktp_penjual' => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'kk_penjual' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            // 'ktp_penjual' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            // 'kk_penjual' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-            'buku_nikah' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            // 'buku_nikah' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-            'pbb_tanah' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            // 'pbb_tanah' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-            'npwp_penjual' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            // 'npwp_penjual' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-            'sertifikat_tanah' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            // 'sertifikat_tanah' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-            'photo_denah_lokasi' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            // 'photo_denah_lokasi' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
             'nama_pembeli' => 'required',
             'telepon_pembeli' => 'required',
 
-            'ktp_pembeli' => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'kk_pembeli' => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'npwp_pembeli' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            // 'ktp_pembeli' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            // 'kk_pembeli' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            // 'npwp_pembeli' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
         ]);
 
         // UPLOAD FILE
-        $ktpPenjual = $request->file('ktp_penjual')->store('dokumen', 'public');
+        // $ktpPenjual = $request->file('ktp_penjual')->store('dokumen', 'public');
 
-        $kkPenjual = $request->file('kk_penjual')->store('dokumen', 'public');
+        // $kkPenjual = $request->file('kk_penjual')->store('dokumen', 'public');
 
-        $bukuNikah = $request->file('buku_nikah')->store('dokumen', 'public');
+        // $bukuNikah = $request->file('buku_nikah')->store('dokumen', 'public');
 
-        $pbbTanah = $request->file('pbb_tanah')->store('dokumen', 'public');
+        // $pbbTanah = $request->file('pbb_tanah')->store('dokumen', 'public');
 
-        $npwpPenjual = $request->file('npwp_penjual')->store('dokumen', 'public');
+        // $npwpPenjual = $request->file('npwp_penjual')->store('dokumen', 'public');
 
-        $sertifikat = $request->file('sertifikat_tanah')->store('dokumen', 'public');
+        // $sertifikat = $request->file('sertifikat_tanah')->store('dokumen', 'public');
 
-        $denah = $request->file('photo_denah_lokasi')->store('dokumen', 'public');
+        // $denah = $request->file('photo_denah_lokasi')->store('dokumen', 'public');
 
-        $ktpPembeli = $request->file('ktp_pembeli')->store('dokumen', 'public');
+        // $ktpPembeli = $request->file('ktp_pembeli')->store('dokumen', 'public');
 
-        $kkPembeli = $request->file('kk_pembeli')->store('dokumen', 'public');
+        // $kkPembeli = $request->file('kk_pembeli')->store('dokumen', 'public');
 
-        $npwpPembeli = $request->file('npwp_pembeli')->store('dokumen', 'public');
+        // $npwpPembeli = $request->file('npwp_pembeli')->store('dokumen', 'public');
 
         // SIMPAN DATABASE
-        Pengajuan::create([
+        $pengajuan = Pengajuan::create([
 
         'user_id' => auth()->id(),
 
         'layanan_id' => 1,
-
-        'layanan' => 'Akta Jual Beli',
 
         'nama' => $request->nama_pembeli,
 
@@ -85,25 +84,68 @@ class PengajuanController extends Controller
         'tanggal_pengajuan' => $request->tanggal_pengajuan,
 
         'status' => 'pending',
+        ]);
 
-        'dokumen' => json_encode([
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KTP Penjual',
+//     'file_dokumen' => $ktpPenjual,
+// ]);
 
-        'ktp_penjual' => $ktpPenjual,
-        'kk_penjual' => $kkPenjual,
-        'buku_nikah' => $bukuNikah,
-        'pbb_tanah' => $pbbTanah,
-        'npwp_penjual' => $npwpPenjual,
-        'sertifikat_tanah' => $sertifikat,
-        'photo_denah_lokasi' => $denah,
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KK Penjual',
+//     'file_dokumen' => $kkPenjual,
+// ]);
 
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Buku Nikah',
+//     'file_dokumen' => $bukuNikah,
+// ]);
 
-        'ktp_pembeli' => $ktpPembeli,
-        'kk_pembeli' => $kkPembeli,
-        'npwp_pembeli' => $npwpPembeli,
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'PBB Tanah',
+//     'file_dokumen' => $pbbTanah,
+// ]);
 
-    ])
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'NPWP Penjual',
+//     'file_dokumen' => $npwpPenjual,
+// ]);
 
-]);
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Sertifikat Tanah',
+//     'file_dokumen' => $sertifikat,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Photo Denah Lokasi',
+//     'file_dokumen' => $denah,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KTP Pembeli',
+//     'file_dokumen' => $ktpPembeli,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KK Pembeli',
+//     'file_dokumen' => $kkPembeli,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'NPWP Pembeli',
+//     'file_dokumen' => $npwpPembeli,
+// ]);
+
 
         return redirect()->route('user.histori')
             ->with('success', 'Pengajuan jual beli berhasil dikirim');
@@ -124,26 +166,26 @@ public function storeHibah(Request $request)
         'telepon_pemberi' => 'required',
         'tanggal_pengajuan' => 'required|date',
 
-        'ktp_pemberi' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'ktp_pemberi' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'kk_pemberi' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'kk_pemberi' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
         // PENERIMA HIBAH
         'nama_penerima' => 'required',
         'telepon_penerima' => 'required',
 
-        'ktp_penerima' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'ktp_penerima' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'kk_penerima' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'kk_penerima' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
         // DOKUMEN
-        'sertifikat_tanah' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'sertifikat_tanah' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'npwp' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'npwp' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'surat_hibah' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'surat_hibah' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'photo_denah_lokasi' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'photo_denah_lokasi' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
     ]);
 
@@ -153,29 +195,29 @@ public function storeHibah(Request $request)
     |--------------------------------------------------------------------------
     */
 
-    $ktpPemberi = $request->file('ktp_pemberi')
-        ->store('dokumen', 'public');
+    // $ktpPemberi = $request->file('ktp_pemberi')
+    //     ->store('dokumen', 'public');
 
-    $kkPemberi = $request->file('kk_pemberi')
-        ->store('dokumen', 'public');
+    // $kkPemberi = $request->file('kk_pemberi')
+    //     ->store('dokumen', 'public');
 
-    $ktpPenerima = $request->file('ktp_penerima')
-        ->store('dokumen', 'public');
+    // $ktpPenerima = $request->file('ktp_penerima')
+    //     ->store('dokumen', 'public');
 
-    $kkPenerima = $request->file('kk_penerima')
-        ->store('dokumen', 'public');
+    // $kkPenerima = $request->file('kk_penerima')
+    //     ->store('dokumen', 'public');
 
-    $sertifikat = $request->file('sertifikat_tanah')
-        ->store('dokumen', 'public');
+    // $sertifikat = $request->file('sertifikat_tanah')
+    //     ->store('dokumen', 'public');
 
-    $npwp = $request->file('npwp')
-        ->store('dokumen', 'public');
+    // $npwp = $request->file('npwp')
+    //     ->store('dokumen', 'public');
 
-    $suratHibah = $request->file('surat_hibah')
-        ->store('dokumen', 'public');
+    // $suratHibah = $request->file('surat_hibah')
+    //     ->store('dokumen', 'public');
 
-    $denah = $request->file('photo_denah_lokasi')
-        ->store('dokumen', 'public');
+    // $denah = $request->file('photo_denah_lokasi')
+    //     ->store('dokumen', 'public');
 
     /*
     |--------------------------------------------------------------------------
@@ -183,13 +225,11 @@ public function storeHibah(Request $request)
     |--------------------------------------------------------------------------
     */
 
-    Pengajuan::create([
+    $pengajuan = Pengajuan::create([
 
         'user_id' => auth()->id(),
 
         'layanan_id' => 2,
-
-        'layanan' => 'Akta Hibah',
 
         'nama' => $request->nama_penerima,
 
@@ -203,27 +243,56 @@ public function storeHibah(Request $request)
 
         'status' => 'pending',
 
-        'dokumen' => json_encode([
-
-            'ktp_pemberi' => $ktpPemberi,
-
-            'kk_pemberi' => $kkPemberi,
-
-            'ktp_penerima' => $ktpPenerima,
-
-            'kk_penerima' => $kkPenerima,
-
-            'sertifikat_tanah' => $sertifikat,
-
-            'npwp' => $npwp,
-
-            'surat_hibah' => $suratHibah,
-
-            'photo_denah_lokasi' => $denah,
-
-        ])
-
     ]);
+
+//     Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KTP Pemberi',
+//     'file_dokumen' => $ktpPemberi,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KK Pemberi',
+//     'file_dokumen' => $kkPemberi,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KTP Penerima',
+//     'file_dokumen' => $ktpPenerima,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KK Penerima',
+//     'file_dokumen' => $kkPenerima,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Sertifikat',
+//     'file_dokumen' => $sertifikat,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'NPWP',
+//     'file_dokumen' => $npwp,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Surat Hibah',
+//     'file_dokumen' => $suratHibah,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Photo Denah Lokasi',
+//     'file_dokumen' => $denah,
+// ]);
+
 
     return redirect()->route('user.histori')
         ->with('success', 'Pengajuan hibah berhasil dikirim');
@@ -243,51 +312,49 @@ public function storeWarisan(Request $request)
         'telepon_pemohon' => 'required',
         'tanggal_pengajuan' => 'required|date',
 
-        'ktp_ahli_waris' => 'required|file|mimes:jpg,jpeg,png,pdf',
-        'kk_ahli_waris' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'ktp_ahli_waris' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'kk_ahli_waris' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'surat_kematian' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'surat_kematian' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'surat_keterangan_ahli_waris' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'surat_keterangan_ahli_waris' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'sertifikat_tanah' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'sertifikat_tanah' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'npwp_ahli_waris' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'npwp_ahli_waris' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'photo_denah_lokasi' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'photo_denah_lokasi' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
     ]);
 
     // UPLOAD FILE
-    $ktpAhliWaris = $request->file('ktp_ahli_waris')
-        ->store('dokumen', 'public');
+    // $ktpAhliWaris = $request->file('ktp_ahli_waris')
+    //     ->store('dokumen', 'public');
 
-    $kkAhliWaris = $request->file('kk_ahli_waris')
-        ->store('dokumen', 'public');
+    // $kkAhliWaris = $request->file('kk_ahli_waris')
+    //     ->store('dokumen', 'public');
 
-    $suratKematian = $request->file('surat_kematian')
-        ->store('dokumen', 'public');
+    // $suratKematian = $request->file('surat_kematian')
+    //     ->store('dokumen', 'public');
 
-    $suratAhliWaris = $request->file('surat_keterangan_ahli_waris')
-        ->store('dokumen', 'public');
+    // $suratAhliWaris = $request->file('surat_keterangan_ahli_waris')
+    //     ->store('dokumen', 'public');
 
-    $sertifikat = $request->file('sertifikat_tanah')
-        ->store('dokumen', 'public');
+    // $sertifikat = $request->file('sertifikat_tanah')
+    //     ->store('dokumen', 'public');
 
-    $npwp = $request->file('npwp_ahli_waris')
-        ->store('dokumen', 'public');
+    // $npwp = $request->file('npwp_ahli_waris')
+    //     ->store('dokumen', 'public');
 
-    $denah = $request->file('photo_denah_lokasi')
-        ->store('dokumen', 'public');
+    // $denah = $request->file('photo_denah_lokasi')
+    //     ->store('dokumen', 'public');
 
     // SIMPAN DATABASE
-    Pengajuan::create([
+    $pengajuan = Pengajuan::create([
 
         'user_id' => auth()->id(),
 
         'layanan_id' => 3,
-
-        'layanan' => 'Akta Warisan',
 
         'nama' => $request->nama_pemohon,
 
@@ -297,25 +364,49 @@ public function storeWarisan(Request $request)
 
         'status' => 'pending',
 
-        'dokumen' => json_encode([
-
-            'ktp_ahli_waris' => $ktpAhliWaris,
-
-            'kk_ahli_waris' => $kkAhliWaris,
-
-            'surat_kematian' => $suratKematian,
-
-            'surat_keterangan_ahli_waris' => $suratAhliWaris,
-
-            'sertifikat_tanah' => $sertifikat,
-
-            'npwp_ahli_waris' => $npwp,
-
-            'photo_denah_lokasi' => $denah,
-
-        ])
-
     ]);
+
+//         Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KTP Ahli Waris',
+//     'file_dokumen' => $ktpAhliWaris,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KK Ahli Waris',
+//     'file_dokumen' => $kkAhliWaris,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Surat Kematian',
+//     'file_dokumen' => $suratKematian,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Surat Ahli Waris',
+//     'file_dokumen' => $suratAhliWaris,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Sertifikat Tanah',
+//     'file_dokumen' => $sertifikat,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'NPWP Ahli Waris',
+//     'file_dokumen' => $npwp,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Photo Denah Lokasi',
+//     'file_dokumen' => $denah,
+// ]);
 
     return redirect()->route('user.histori')
         ->with('success', 'Pengajuan warisan berhasil dikirim');
@@ -337,19 +428,21 @@ public function storeWarisan(Request $request)
 
         'tanggal_pengajuan' => 'required|date',
 
-        'ktp_pemilik' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'ktp_pemilik' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'kk_pemilik' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'kk_pemilik' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'npwp_pemilik' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'npwp_pemilik' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'sertifikat_tanah' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'sertifikat_tanah' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'surat_kesepakatan_bersama' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'surat_kesepakatan_bersama' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
-        'photo_denah_lokasi' => 'required|file|mimes:jpg,jpeg,png,pdf',
+        // 'photo_denah_lokasi' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
     ]);
+
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -357,23 +450,23 @@ public function storeWarisan(Request $request)
     |--------------------------------------------------------------------------
     */
 
-    $ktp = $request->file('ktp_pemilik')
-        ->store('dokumen', 'public');
+    // $ktp = $request->file('ktp_pemilik')
+    //     ->store('dokumen', 'public');
 
-    $kk = $request->file('kk_pemilik')
-        ->store('dokumen', 'public');
+    // $kk = $request->file('kk_pemilik')
+    //     ->store('dokumen', 'public');
 
-    $npwp = $request->file('npwp_pemilik')
-        ->store('dokumen', 'public');
+    // $npwp = $request->file('npwp_pemilik')
+    //     ->store('dokumen', 'public');
 
-    $sertifikat = $request->file('sertifikat_tanah')
-        ->store('dokumen', 'public');
+    // $sertifikat = $request->file('sertifikat_tanah')
+    //     ->store('dokumen', 'public');
 
-    $suratKesepakatan = $request->file('surat_kesepakatan_bersama')
-        ->store('dokumen', 'public');
+    // $suratKesepakatan = $request->file('surat_kesepakatan_bersama')
+    //     ->store('dokumen', 'public');
 
-    $denah = $request->file('photo_denah_lokasi')
-        ->store('dokumen', 'public');
+    // $denah = $request->file('photo_denah_lokasi')
+    //     ->store('dokumen', 'public');
 
     /*
     |--------------------------------------------------------------------------
@@ -381,13 +474,11 @@ public function storeWarisan(Request $request)
     |--------------------------------------------------------------------------
     */
 
-    Pengajuan::create([
+    $pengajuan = Pengajuan::create([
 
         'user_id' => auth()->id(),
 
         'layanan_id' => 4,
-
-        'layanan' => 'APHB',
 
         'nama' => $request->nama_pemohon,
 
@@ -397,26 +488,70 @@ public function storeWarisan(Request $request)
 
         'status' => 'pending',
 
-        'dokumen' => json_encode([
-
-            'ktp_pemilik' => $ktp,
-
-            'kk_pemilik' => $kk,
-
-            'npwp_pemilik' => $npwp,
-
-            'sertifikat_tanah' => $sertifikat,
-
-            'surat_kesepakatan_bersama' => $suratKesepakatan,
-
-            'photo_denah_lokasi' => $denah,
-
-        ])
-
     ]);
+
+//             Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KTP Pemilik',
+//     'file_dokumen' => $ktp,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'KK Pemilik',
+//     'file_dokumen' => $kk,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'NPWP Pemilik',
+//     'file_dokumen' => $npwp,
+// ]);
+
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Sertifikat Tanah',
+//     'file_dokumen' => $sertifikat,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Surat Kesepakatan Bersama',
+//     'file_dokumen' => $suratKesepakatan,
+// ]);
+
+// Dokumen::create([
+//     'pengajuan_id' => $pengajuan->id,
+//     'nama_dokumen' => 'Photo Denah Lokasi',
+//     'file_dokumen' => $denah,
+// ]);
 
     return redirect()->route('user.histori')
         ->with('success', 'Pengajuan APHB berhasil dikirim');
+}
+
+public function uploadDokumen($id)
+{
+    $pengajuan = Pengajuan::findOrFail($id);
+
+    // hanya pemilik pengajuan
+    if ($pengajuan->user_id != auth()->id()) {
+        abort(403);
+    }
+
+    // hanya jika sudah disetujui
+    if ($pengajuan->status != 'disetujui') {
+        return redirect()->route('user.histori')
+            ->with('error', 'Pengajuan belum disetujui.');
+    }
+
+    return view('user.upload-dokumen', compact('pengajuan'));
+}
+
+public function storeDokumen(Request $request, $id)
+{
+    // nanti di sini kita simpan semua file ke tabel dokumen
 }
 
     /*
@@ -427,7 +562,10 @@ public function storeWarisan(Request $request)
 
     public function index()
 {
-    $pengajuan = Pengajuan::latest()->get();
+    $pengajuan = Pengajuan::with([
+    'user',
+    'layanan'
+])->latest()->get();
 
     return view('admin.pengajuan', compact('pengajuan'));
 }
@@ -448,21 +586,31 @@ public function storeWarisan(Request $request)
 
     public function adminPengajuan()
     {
-        $pengajuan = Pengajuan::latest()->get();
+        $pengajuan = Pengajuan::with([
+    'user',
+    'layanan'
+])->latest()->get();
 
         return view('admin.pengajuan', compact('pengajuan'));
     }
 
     public function show($id)
     {
-        $pengajuan = Pengajuan::findOrFail($id);
+    $pengajuan = Pengajuan::with([
+        'user',
+        'layanan',
+        'dokumen'
+    ])->findOrFail($id);
 
-        return view('admin.detail-pengajuan', compact('pengajuan'));
+    return view('admin.detail-pengajuan', compact('pengajuan'));
     }
 
     public function surat($id)
     {
-        $pengajuan = Pengajuan::findOrFail($id);
+        $pengajuan = Pengajuan::with([
+    'user',
+    'layanan'
+])->findOrFail($id);
 
         return view('surat.pemberitahuan', [
         'pengajuan' => $pengajuan,
@@ -477,7 +625,10 @@ public function storeWarisan(Request $request)
 
 public function kirimSurat($id)
 {
-    $pengajuan = Pengajuan::findOrFail($id);
+    $pengajuan = Pengajuan::with([
+    'user',
+    'layanan'
+])->findOrFail($id);
 
     // Generate PDF
     $pdf = Pdf::loadView('surat.pemberitahuan', compact('pengajuan'));
@@ -505,7 +656,10 @@ public function kirimSurat($id)
 
 public function downloadSurat($id)
 {
-    $pengajuan = Pengajuan::findOrFail($id);
+    $pengajuan = Pengajuan::with([
+    'user',
+    'layanan'
+])->findOrFail($id);
 
     $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
         'surat.pemberitahuan',
@@ -517,7 +671,10 @@ public function downloadSurat($id)
 
 public function previewSurat($id)
 {
-    $pengajuan = Pengajuan::findOrFail($id);
+    $pengajuan = Pengajuan::with([
+        'user',
+        'layanan'
+    ])->findOrFail($id);
 
     return view('admin.surat', compact('pengajuan'));
 }
@@ -546,10 +703,13 @@ public function laporan(Request $request)
     $bulan = $request->bulan ?? date('m');
     $tahun = $request->tahun ?? date('Y');
 
-    $laporan = Pengajuan::
-        whereYear('tanggal_pengajuan', $tahun)
+    $laporan = Pengajuan::with([
+            'user',
+            'layanan'
+        ])
+        ->whereYear('tanggal_pengajuan', $tahun)
         ->whereMonth('tanggal_pengajuan', $bulan)
-        ->whereIn('status', ['selesai'])
+        ->where('status', 'selesai')
         ->latest()
         ->get();
 
@@ -565,10 +725,13 @@ public function laporanPdf(Request $request)
     $bulan = $request->bulan;
     $tahun = $request->tahun;
 
-    $laporan = Pengajuan::
-            whereYear('tanggal_pengajuan', $tahun)
+    $laporan = Pengajuan::with([
+            'user',
+            'layanan'
+        ])
+        ->whereYear('tanggal_pengajuan', $tahun)
         ->whereMonth('tanggal_pengajuan', $bulan)
-        ->whereIn('status', ['selesai'])
+        ->where('status', 'selesai')
         ->latest()
         ->get();
 
@@ -602,22 +765,24 @@ public function update(Request $request, $id)
 {
     $pengajuan = Pengajuan::findOrFail($id);
 
+    // Hanya pemilik data yang boleh mengubah
     if ($pengajuan->user_id != auth()->id()) {
         abort(403);
     }
-
-    $dokumen = json_decode($pengajuan->dokumen, true);
 
     if ($request->hasFile('dokumen_baru')) {
 
         $file = $request->file('dokumen_baru')
             ->store('dokumen', 'public');
 
-        $dokumen['dokumen_revisi'] = $file;
+        Dokumen::create([
+            'pengajuan_id' => $pengajuan->id,
+            'nama_dokumen' => 'Dokumen Revisi',
+            'file_dokumen' => $file,
+        ]);
     }
 
     $pengajuan->update([
-        'dokumen' => json_encode($dokumen),
         'status' => 'pending',
         'catatan_admin' => null,
     ]);

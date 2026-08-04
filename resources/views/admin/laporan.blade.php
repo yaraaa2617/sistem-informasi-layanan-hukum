@@ -113,15 +113,15 @@
                 </td>
 
                 <td class="p-4">
-                    {{ $item->nama }}
+                    {{ $item->user->name }}
                 </td>
 
                 <td class="p-4">
-                    {{ $item->layanan }}
+                    {{ $item->layanan->nama_layanan ?? '-' }}
                 </td>
 
                 <td class="p-4">
-                    {{ $item->created_at->format('d M Y') }}
+                    {{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->format('d M Y') }}
                 </td>
 
                 <td class="p-4">

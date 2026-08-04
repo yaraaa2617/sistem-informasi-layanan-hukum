@@ -26,7 +26,7 @@
         </h2>
 
         <p class="text-gray-700">
-            {{ $pengajuan->layanan }}
+            {{ $pengajuan->layanan->nama_layanan ?? '-' }}
         </p>
 
     </div>
@@ -206,6 +206,11 @@
         {{ $pengajuan->status == 'revisi' ? 'selected' : '' }}>
         Berkas Belum Lengkap
     </option>
+
+    <option value="disetujui"
+    {{ $pengajuan->status == 'disetujui' ? 'selected' : '' }}>
+    Disetujui
+</option>
 
     <option value="diproses"
         {{ $pengajuan->status == 'diproses' ? 'selected' : '' }}>
