@@ -2,64 +2,128 @@
 
 @section('content')
 
-<a href="{{ url()->previous() }}"
-   class="inline-flex items-center justify-center w-7 h-7 mb-3 bg-[#6B3F2A] text-white rounded-full text-sm hover:bg-[#4E342E]">
-    ←
-</a>
+<form method="POST" action="{{ route('warisan.store') }}">
+    @csrf
 
-<h1 class="text-3xl font-bold mb-8">
-    Balik Nama Waris
-</h1>
+    <h2 class="text-2xl font-bold mb-6 text-blue-600">
+        Data Pemohon
+    </h2>
 
-<div class="bg-white border border-[#E5D3C1] rounded-2xl shadow p-6">
+    <div class="grid grid-cols-2 gap-6 mb-8">
 
-    <form method="POST"
-            action="{{ route('warisan.store') }}">
-
-        @csrf
-
-        <div class="grid grid-cols-2 gap-6 mb-8">
-
-            <div>
+        <div>
             <label class="block mb-2 font-semibold">
                 Nama Pemohon
             </label>
-
             <input type="text"
-                    name="nama_pemohon"
-                   class="w-full border rounded-xl p-4">
+                   name="nama_pemohon"
+                   class="w-full border rounded-xl p-4"
+                   required>
         </div>
 
-                <div>
+        <div>
             <label class="block mb-2 font-semibold">
-                Nomor Telepon Pemohon
+                Nomor HP
             </label>
-
             <input type="text"
-                    name="telepon_pemohon"
-                   class="w-full border rounded-xl p-4">
-            </div>
-
-            <div>
-                     <label class="block mb-2 font-semibold">
-                         Tanggal Pengajuan
-                    </label>
-
-                     <input type="date"
-                            name="tanggal_pengajuan"
-                            class="w-full border rounded-xl p-4"
-                            required>
-                </div>
-
+                   name="telepon_pemohon"
+                   class="w-full border rounded-xl p-4"
+                   required>
         </div>
 
+        <div>
+            <label class="block mb-2 font-semibold">
+                Nama Pewaris
+            </label>
+            <input type="text"
+                   name="nama_pewaris"
+                   class="w-full border rounded-xl p-4"
+                   required>
+        </div>
 
-        <button class="bg-[#6B3F2A] hover:bg-[#A77F60] text-white px-5 py-3 rounded-xl">
-            Kirim Pengajuan
-        </button>
+        <div>
+            <label class="block mb-2 font-semibold">
+                Tanggal Meninggal
+            </label>
+            <input type="date"
+                   name="tanggal_meninggal"
+                   class="w-full border rounded-xl p-4"
+                   required>
+        </div>
 
-    </form>
+        <div>
+            <label class="block mb-2 font-semibold">
+                Jumlah Ahli Waris
+            </label>
+            <input type="number"
+                   name="jumlah_ahli_waris"
+                   min="1"
+                   class="w-full border rounded-xl p-4"
+                   required>
+        </div>
 
-</div>
+    </div>
+
+
+    <h2 class="text-2xl font-bold mb-6 text-blue-600">
+        Data Objek Tanah
+    </h2>
+
+    <div class="grid grid-cols-2 gap-6 mb-8">
+
+        <div class="col-span-2">
+            <label class="block mb-2 font-semibold">
+                Alamat Objek Tanah
+            </label>
+            <textarea name="alamat_objek_tanah"
+                      class="w-full border rounded-xl p-4"
+                      required></textarea>
+        </div>
+
+        <div>
+            <label class="block mb-2 font-semibold">
+                Kecamatan
+            </label>
+            <input type="text"
+                   name="kecamatan"
+                   class="w-full border rounded-xl p-4"
+                   required>
+        </div>
+
+        <div>
+            <label class="block mb-2 font-semibold">
+                Kabupaten/Kota
+            </label>
+            <input type="text"
+                   name="kabupaten_kota"
+                   class="w-full border rounded-xl p-4"
+                   required>
+        </div>
+
+        <div>
+            <label class="block mb-2 font-semibold">
+                Tujuan Pengajuan
+            </label>
+            <textarea name="tujuan_pengajuan"
+                      class="w-full border rounded-xl p-4"
+                      required></textarea>
+        </div>
+
+        <div>
+            <label class="block mb-2 font-semibold">
+                Keterangan
+            </label>
+            <textarea name="keterangan"
+                      class="w-full border rounded-xl p-4"></textarea>
+        </div>
+
+    </div>
+
+    <button type="submit"
+            class="bg-[#6B3F2A] hover:bg-[#A77F60] text-white px-5 py-3 rounded-xl">
+        Kirim Pengajuan
+    </button>
+
+</form>
 
 @endsection

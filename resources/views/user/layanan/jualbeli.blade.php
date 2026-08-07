@@ -2,206 +2,139 @@
 
 @section('content')
 
-<a href="{{ url()->previous() }}"
-   class="inline-flex items-center justify-center w-7 h-7 mb-3 bg-[#6B3F2A] text-white rounded-full text-sm hover:bg-[#4E342E]">
-    ←
-</a>
+<form method="POST" action="{{ route('jualbeli.store') }}">
+    @csrf
 
-<h1 class="text-3xl font-bold mb-8">
-    Balik Nama Jual Beli
-</h1>
+    {{-- DATA PENJUAL & PEMBELI --}}
+    <h2 class="text-2xl font-bold mb-6 text-blue-600">
+        Data Penjual & Pembeli
+    </h2>
 
-<div class="bg-white border border-[#E5D3C1] rounded-2xl shadow p-6">
+    <div class="grid grid-cols-2 gap-6 mb-8">
 
-    <form method="POST"
-          action="{{ route('jualbeli.store') }}"
-          enctype="multipart/form-data">
+        <div>
+            <label class="block mb-2 font-semibold">
+                Nama Penjual
+            </label>
 
-        @csrf
-
-        {{-- DATA PENJUAL --}}
-        <h2 class="text-2xl font-bold mb-6 text-blue-600">
-            Data Penjual
-        </h2>
-
-        <div class="grid grid-cols-2 gap-6 mb-8">
-
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Nama Penjual
-                </label>
-
-                <input type="text"
-                       name="nama_penjual"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Nomor Telepon Penjual
-                </label>
-
-                <input type="text"
-                       name="telepon_penjual"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-            <div>
-                     <label class="block mb-2 font-semibold">
-                         Tanggal Pengajuan
-                    </label>
-
-                     <input type="date"
-                            name="tanggal_pengajuan"
-                            class="w-full border rounded-xl p-4"
-                            required>
-                </div>
-
+            <input type="text"
+                   name="nama_penjual"
+                   value="{{ old('nama_penjual') }}"
+                   class="w-full border rounded-xl p-4"
+                   required>
         </div>
 
-        <div class="grid grid-cols-2 gap-6 mb-8">
+        <div>
+            <label class="block mb-2 font-semibold">
+                Nomor HP Penjual
+            </label>
 
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Upload KTP Penjual (Suami Istri/Anak/Orangtua)
-                </label>
-
-                <input type="file"
-                       name="ktp_penjual"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Upload KK Penjual
-                </label>
-
-                <input type="file"
-                       name="kk_penjual"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-                        <div>
-                <label class="block mb-2 font-semibold">
-                    Upload Buku Nikah (bila bercerai, Akta Cerai)
-                </label>
-
-                <input type="file"
-                       name="buku_nikah"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-                        <div>
-                <label class="block mb-2 font-semibold">
-                    Upload PBB Tanah
-                </label>
-
-                <input type="file"
-                       name="pbb_tanah"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Upload NPWP Penjual (min 2 tahun terakhir)
-                </label>
-
-                <input type="file"
-                       name="npwp_penjual"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Upload Sertifikat Tanah
-                </label>
-
-                <input type="file"
-                       name="sertifikat_tanah"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-                        <div>
-                <label class="block mb-2 font-semibold">
-                    Upload Photo Denah Lokasi (Aplikasi Geotag)
-                </label>
-
-                <input type="file"
-                       name="photo_denah_lokasi"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
+            <input type="text"
+                   name="telepon_penjual"
+                   value="{{ old('telepon_penjual') }}"
+                   class="w-full border rounded-xl p-4"
+                   required>
         </div>
 
-        {{-- DATA PEMBELI --}}
-        <h2 class="text-2xl font-bold mb-6 text-green-600">
-            Data Pembeli
-        </h2>
+        <div>
+            <label class="block mb-2 font-semibold">
+                Nama Pembeli
+            </label>
 
-        <div class="grid grid-cols-2 gap-6 mb-8">
-
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Nama Pembeli
-                </label>
-
-                <input type="text"
-                       name="nama_pembeli"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Nomor Telepon Pembeli
-                </label>
-
-                <input type="text"
-                       name="telepon_pembeli"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
+            <input type="text"
+                   name="nama_pembeli"
+                   value="{{ old('nama_pembeli') }}"
+                   class="w-full border rounded-xl p-4"
+                   required>
         </div>
 
-        <div class="grid grid-cols-2 gap-6 mb-8">
+        <div>
+            <label class="block mb-2 font-semibold">
+                Nomor HP Pembeli
+            </label>
 
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Upload KTP Pembeli
-                </label>
-
-                <input type="file"
-                       name="ktp_pembeli"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Upload KK Pembeli
-                </label>
-
-                <input type="file"
-                       name="kk_pembeli"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
-            <div>
-                <label class="block mb-2 font-semibold">
-                    Upload NPWP Pembeli (min 2 tahun terakhir)
-                </label>
-
-                <input type="file"
-                       name="npwp_pembeli"
-                       class="w-full border rounded-xl p-4">
-            </div>
-
+            <input type="text"
+                   name="telepon_pembeli"
+                   value="{{ old('telepon_pembeli') }}"
+                   class="w-full border rounded-xl p-4"
+                   required>
         </div>
 
-        <button class="bg-[#6B3F2A] hover:bg-[#A77F60] text-white px-5 py-3 rounded-xl">
-            Kirim Pengajuan
-        </button>
+    </div>
 
-    </form>
 
-</div>
+    {{-- DATA OBJEK TANAH --}}
+    <h2 class="text-2xl font-bold mb-6 text-blue-600">
+        Data Objek Tanah
+    </h2>
+
+    <div class="grid grid-cols-2 gap-6 mb-8">
+
+        <div class="col-span-2">
+            <label class="block mb-2 font-semibold">
+                Alamat Objek Tanah
+            </label>
+
+            <textarea name="alamat_objek_tanah"
+                      class="w-full border rounded-xl p-4"
+                      rows="3"
+                      required>{{ old('alamat_objek_tanah') }}</textarea>
+        </div>
+
+        <div>
+            <label class="block mb-2 font-semibold">
+                Kecamatan
+            </label>
+
+            <input type="text"
+                   name="kecamatan"
+                   value="{{ old('kecamatan') }}"
+                   class="w-full border rounded-xl p-4"
+                   required>
+        </div>
+
+        <div>
+            <label class="block mb-2 font-semibold">
+                Kabupaten/Kota
+            </label>
+
+            <input type="text"
+                   name="kabupaten_kota"
+                   value="{{ old('kabupaten_kota') }}"
+                   class="w-full border rounded-xl p-4"
+                   required>
+        </div>
+
+        <div>
+            <label class="block mb-2 font-semibold">
+                Tujuan Pengajuan
+            </label>
+
+            <textarea name="tujuan_pengajuan"
+                      class="w-full border rounded-xl p-4"
+                      rows="3"
+                      required>{{ old('tujuan_pengajuan') }}</textarea>
+        </div>
+
+        <div>
+            <label class="block mb-2 font-semibold">
+                Keterangan Tambahan
+            </label>
+
+            <textarea name="keterangan"
+                      class="w-full border rounded-xl p-4"
+                      rows="3">{{ old('keterangan') }}</textarea>
+        </div>
+
+    </div>
+
+
+    {{-- TOMBOL --}}
+    <button type="submit"
+            class="bg-[#6B3F2A] hover:bg-[#A77F60] text-white px-5 py-3 rounded-xl">
+        Kirim Pengajuan
+    </button>
+
+</form>
 
 @endsection

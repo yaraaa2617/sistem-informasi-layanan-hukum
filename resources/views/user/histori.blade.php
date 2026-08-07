@@ -50,22 +50,22 @@
 <tr class="border-b">
 
     <td class="p-4">
-            @if($item->layanan == 'Akta Jual Beli')
+    @if($item->layanan?->nama_layanan == 'Akta Jual Beli')
         {{ $item->nama_penjual }}
 
-            @elseif($item->layanan == 'Akta Hibah')
+    @elseif($item->layanan?->nama_layanan == 'Akta Hibah')
         {{ $item->nama_penjual }}
 
-            @elseif($item->layanan == 'Akta Warisan')
+    @elseif($item->layanan?->nama_layanan == 'Jasa Turun Waris')
         {{ $item->nama }}
 
-            @elseif($item->layanan == 'APHB')
+    @elseif($item->layanan?->nama_layanan == 'APHB')
         {{ $item->nama }}
 
-            @else
+    @else
         {{ $item->nama }}
-        @endif
-    </td>
+    @endif
+</td>
 
     <td class="p-4">
         {{ $item->layanan->nama_layanan ?? '-' }}

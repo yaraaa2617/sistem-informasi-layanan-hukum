@@ -12,33 +12,61 @@ class Pengajuan extends Model
 
     protected $fillable = [
 
+        // RELASI
         'user_id',
         'layanan_id',
 
+        // DATA UMUM
         'nama',
         'status',
         'tanggal_pengajuan',
 
+        // JUAL BELI
         'nama_penjual',
         'telepon_penjual',
-
         'nama_pembeli',
         'telepon_pembeli',
 
-        'telepon_pemohon',
+        // HIBAH
+        'nama_pemberi',
+        'telepon_pemberi',
+        'nama_penerima',
+        'telepon_penerima',
+        'hubungan_pemberi_penerima',
 
+        // WARISAN
+        'nama_pemohon',
+        'telepon_pemohon',
+        'nama_pewaris',
+        'tanggal_meninggal',
+        'jumlah_ahli_waris',
+
+        // APHB
+        // memakai nama_pemohon dan telepon_pemohon
+
+        // DATA OBJEK TANAH
+        'alamat_objek_tanah',
+        'kecamatan',
+        'kabupaten_kota',
+
+        // TUJUAN DAN KETERANGAN
+        'tujuan_pengajuan',
+        'keterangan',
+
+        // ADMIN
         'catatan_admin',
 
+        // SURAT
         'file_surat',
-        'progress',
 
+        // PROGRESS
+        'progress',
     ];
 
-
     /*
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     | RELASI USER
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
 
     public function user()
@@ -46,11 +74,10 @@ class Pengajuan extends Model
         return $this->belongsTo(User::class);
     }
 
-
     /*
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     | RELASI LAYANAN
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
 
     public function layanan()
@@ -58,8 +85,14 @@ class Pengajuan extends Model
         return $this->belongsTo(Layanan::class);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | RELASI DOKUMEN
+    |--------------------------------------------------------------------------
+    */
+
     public function dokumen()
-{
-    return $this->hasMany(Dokumen::class);
-}
+    {
+        return $this->hasMany(Dokumen::class);
+    }
 }
