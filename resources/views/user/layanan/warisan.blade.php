@@ -11,6 +11,17 @@
 
     <div class="grid grid-cols-2 gap-6 mb-8">
 
+        <div class="col-span-2">
+            <label class="block mb-2 font-semibold">
+                Tanggal Pengajuan
+            </label>
+            <input type="date"
+                   name="tanggal_pengajuan"
+                   value="{{ old('tanggal_pengajuan', date('Y-m-d')) }}"
+                   class="w-full border rounded-xl p-4"
+                   required>
+        </div>
+
         <div>
             <label class="block mb-2 font-semibold">
                 Nama Pemohon

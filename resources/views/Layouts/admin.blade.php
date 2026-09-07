@@ -32,11 +32,6 @@
                 Pegawai
             </a>
 
-            <a href="{{ route('admin.klien') }}"
-               class="block px-6 py-3 hover:bg-[#A77F60]">
-                Klien
-            </a>
-
             <a href="{{ route('admin.pengajuan') }}"
                class="block px-6 py-3 hover:bg-[#A77F60]">
                 Pengajuan

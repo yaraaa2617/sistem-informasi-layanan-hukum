@@ -252,11 +252,12 @@
         {{-- STATUS --}}
         <div class="mb-4">
 
-            <label class="block mb-2 font-semibold">
+            <label class="block mb-2 font-semibold text-[#6B3F2A]">
                 Status
             </label>
 
-            <select name="status"
+            <select id="statusSelect"
+                    name="status"
                     class="w-full border border-[#E5D3C1] rounded-xl p-3">
 
                 <option value="pending"
@@ -271,7 +272,7 @@
 
                 <option value="disetujui"
                     {{ $pengajuan->status == 'disetujui' ? 'selected' : '' }}>
-                    Disetujui
+                    Disetujui (Lanjut Upload Dokumen)
                 </option>
 
                 <option value="diproses"
@@ -289,10 +290,41 @@
         </div>
 
 
+        {{-- PROGRESS --}}
+        <div class="mb-4">
+
+            <label class="block mb-2 font-semibold text-[#6B3F2A]">
+                Progress Akta / Dokumen
+            </label>
+
+            <input type="text"
+                   id="progressInput"
+                   name="progress"
+                   value="{{ $pengajuan->progress }}"
+                   list="opsi-progress"
+                   placeholder="Pilih atau ketik progress..."
+                   class="w-full border border-[#E5D3C1] rounded-xl p-3">
+
+            <datalist id="opsi-progress">
+                <option value="Upload Dokumen (Tahap 2)">
+                <option value="Menunggu Klien Upload Dokumen">
+                <option value="Verifikasi Dokumen Persyaratan">
+                <option value="Penyusunan Draf Akta">
+                <option value="Penandatanganan Akta">
+                <option value="Akta Selesai & Siap Diambil">
+            </datalist>
+
+            <p class="text-xs text-gray-500 mt-1">
+                Pilih dari opsi di atas atau ketik progres khusus sesuai kebutuhan.
+            </p>
+
+        </div>
+
+
         {{-- CATATAN ADMIN --}}
         <div class="mb-4">
 
-            <label class="block mb-2 font-semibold">
+            <label class="block mb-2 font-semibold text-[#6B3F2A]">
                 Catatan Admin
             </label>
 
@@ -306,13 +338,30 @@
 
 
         <button type="submit"
-                class="bg-[#6B3F2A] hover:bg-[#A77F60] text-white px-5 py-3 rounded-xl">
-            Update Status
+                class="bg-[#6B3F2A] hover:bg-[#A77F60] text-white px-5 py-3 rounded-xl font-semibold">
+            Update Status & Progress
         </button>
 
     </form>
 
 </div>
+
+<script>
+    document.getElementById('statusSelect')?.addEventListener('change', function() {
+        const progressInput = document.getElementById('progressInput');
+        if (!progressInput) return;
+
+        if (this.value === 'disetujui') {
+            progressInput.value = 'Upload Dokumen (Tahap 2)';
+        } else if (this.value === 'revisi') {
+            progressInput.value = 'Berkas Belum Lengkap';
+        } else if (this.value === 'diproses') {
+            progressInput.value = 'Penyusunan Draf Akta';
+        } else if (this.value === 'selesai') {
+            progressInput.value = 'Akta Selesai & Siap Diambil';
+        }
+    });
+</script>
 
 
 {{-- ========================================================= --}}

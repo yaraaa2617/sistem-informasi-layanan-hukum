@@ -151,7 +151,7 @@ th, td{
             </td>
 
             <td>
-                {{ $item->layanan }}
+                {{ $item->layanan->nama_layanan ?? '-' }}
             </td>
 
             <td>

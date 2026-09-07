@@ -18,6 +18,7 @@ class PengajuanController extends Controller
     public function storeJualBeli(Request $request)
 {
     $request->validate([
+        'tanggal_pengajuan' => 'required|date',
         'nama_penjual' => 'required',
         'telepon_penjual' => 'required',
         'nama_pembeli' => 'required',
@@ -48,7 +49,7 @@ class PengajuanController extends Controller
         'tujuan_pengajuan' => $request->tujuan_pengajuan,
         'keterangan' => $request->keterangan,
 
-        'tanggal_pengajuan' => now(),
+        'tanggal_pengajuan' => $request->tanggal_pengajuan ?? now(),
         'status' => 'pending',
     ]);
 
@@ -66,6 +67,7 @@ class PengajuanController extends Controller
 public function storeHibah(Request $request)
 {
     $request->validate([
+        'tanggal_pengajuan' => 'required|date',
         'nama_pemberi' => 'required',
         'telepon_pemberi' => 'required',
 
@@ -102,7 +104,7 @@ public function storeHibah(Request $request)
         'tujuan_pengajuan' => $request->tujuan_pengajuan,
         'keterangan' => $request->keterangan,
 
-        'tanggal_pengajuan' => now(),
+        'tanggal_pengajuan' => $request->tanggal_pengajuan ?? now(),
         'status' => 'pending',
     ]);
 
@@ -120,6 +122,7 @@ public function storeHibah(Request $request)
 public function storeWarisan(Request $request)
 {
     $request->validate([
+        'tanggal_pengajuan' => 'required|date',
         'nama_pemohon' => 'required',
         'telepon_pemohon' => 'required',
 
@@ -153,7 +156,7 @@ public function storeWarisan(Request $request)
         'tujuan_pengajuan' => $request->tujuan_pengajuan,
         'keterangan' => $request->keterangan,
 
-        'tanggal_pengajuan' => now(),
+        'tanggal_pengajuan' => $request->tanggal_pengajuan ?? now(),
         'status' => 'pending',
     ]);
 
@@ -171,6 +174,7 @@ public function storeWarisan(Request $request)
 public function storeAPHB(Request $request)
 {
     $request->validate([
+        'tanggal_pengajuan' => 'required|date',
         'nama_pemohon' => 'required',
         'telepon_pemohon' => 'required',
 
@@ -196,7 +200,7 @@ public function storeAPHB(Request $request)
         'tujuan_pengajuan' => $request->tujuan_pengajuan,
         'keterangan' => $request->keterangan,
 
-        'tanggal_pengajuan' => now(),
+        'tanggal_pengajuan' => $request->tanggal_pengajuan ?? now(),
         'status' => 'pending',
     ]);
 
@@ -212,27 +216,65 @@ public function storeAPHB(Request $request)
     */
 
     public function index()
+    public function index(Request $request)
 {
     $pengajuan = Pengajuan::with([
     'user',
     'layanan'
 ])->latest()->get();
+    $query = Pengajuan::with([
+        'user',
+        'layanan'
+    ])->latest();
 
     return view('admin.pengajuan', compact('pengajuan'));
+    if ($request->filled('tahun')) {
+        $query->whereYear('tanggal_pengajuan', $request->tahun);
+    }
+
+    if ($request->filled('bulan')) {
+        $query->whereMonth('tanggal_pengajuan', $request->bulan);
+    }
+
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    $pengajuan = $query->get();
+    $tahun = $request->tahun;
+    $bulan = $request->bulan;
+    $status = $request->status;
+
+    // Ambil daftar tahun dari data tanggal_pengajuan
+    $listTahun = Pengajuan::whereNotNull('tanggal_pengajuan')
+        ->selectRaw('YEAR(tanggal_pengajuan) as tahun')
+        ->distinct()
+        ->orderBy('tahun', 'desc')
+        ->pluck('tahun')
+        ->toArray();
+
+    $currentYear = (int) date('Y');
+    if (!in_array($currentYear, $listTahun)) {
+        $listTahun[] = $currentYear;
+        rsort($listTahun);
+    }
+
+    return view('admin.pengajuan', compact('pengajuan', 'tahun', 'bulan', 'status', 'listTahun'));
 }
 
     public function updateStatus(Request $request, $id)
     {
         $pengajuan = Pengajuan::findOrFail($id);
 
-    $pengajuan->update([
-        'status' => $request->status,
-        'catatan_admin' => $request->catatan_admin,
-    ]);
+        $pengajuan->update([
+            'status' => $request->status,
+            'progress' => $request->progress,
+            'catatan_admin' => $request->catatan_admin,
+        ]);
 
-    return redirect()
-        ->route('admin.pengajuan')
-        ->with('success', 'Status berhasil diupdate');
+        return redirect()
+            ->route('admin.pengajuan')
+            ->with('success', 'Status dan progress berhasil diupdate');
     }
 
     public function adminPengajuan()

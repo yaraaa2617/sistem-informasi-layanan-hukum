@@ -326,10 +326,19 @@ Route::get('/admin', function () {
         return view('admin.pegawai');
     })->name('admin.pegawai');
 
-    // Klien
+    // Klien (Khusus Pengajuan yang Sudah Selesai)
     Route::get('/klien', function () {
-        return view('admin.klien');
+        $klien = \App\Models\Pengajuan::with(['user', 'layanan'])
+            ->where('status', 'selesai')
+            ->latest()
+            ->get();
+
+        return view('admin.klien', compact('klien'));
     })->name('admin.klien');
+
+    Route::get('/admin/klien', function () {
+        return redirect()->route('admin.klien');
+    });
 
     // Pendaftaran
     Route::get('/pendaftaran', function () {
@@ -347,6 +356,9 @@ Route::get('/admin', function () {
 
     // Pengajuan User
     Route::get('/admin/pengajuan', function () {
+    Route::get('/admin/pengajuan',
+        [PengajuanController::class, 'index']
+    )->name('admin.pengajuan');
 
         $pengajuan = \App\Models\Pengajuan::with('user')
                         ->latest()
@@ -402,7 +414,7 @@ Route::resource('/admin/layanan', LayananController::class)
     */
     Route::get('/grafik', function (Request $request) {
 
-        $tahun = $request->tahun ? (int)$request->tahun : date('Y');
+        $tahun = $request->tahun ? (int)$request->tahun : (int)date('Y');
 
         $perBulan = \App\Models\Pengajuan::selectRaw('MONTH(tanggal_pengajuan) as bulan, COUNT(*) as total')
             ->whereYear('tanggal_pengajuan', $tahun)
@@ -410,12 +422,13 @@ Route::resource('/admin/layanan', LayananController::class)
             ->orderBy('bulan')
             ->get();
 
-        $perLayanan = \App\Models\Pengajuan::selectRaw('layanan, COUNT(*) as total')
-            ->whereYear('tanggal_pengajuan', $tahun)
-            ->groupBy('layanan')
+        $perLayanan = \App\Models\Pengajuan::join('layanans', 'pengajuan.layanan_id', '=', 'layanans.id')
+            ->selectRaw('layanans.nama_layanan as layanan, COUNT(pengajuan.id) as total')
+            ->whereYear('pengajuan.tanggal_pengajuan', $tahun)
+            ->groupBy('layanans.id', 'layanans.nama_layanan')
             ->get();
 
-        $dataTahun = \App\Models\Pengajuan::with('user')
+        $dataTahun = \App\Models\Pengajuan::with(['user', 'layanan'])
             ->whereYear('tanggal_pengajuan', $tahun)
             ->latest()
             ->get();
@@ -425,9 +438,13 @@ Route::resource('/admin/layanan', LayananController::class)
             'perLayanan',
             'tahun',
             'dataTahun'
-            ));
+        ));
 
     })->name('admin.grafik');
+
+    Route::get('/admin/grafik', function () {
+        return redirect()->route('admin.grafik');
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -436,18 +453,30 @@ Route::resource('/admin/layanan', LayananController::class)
     */
     Route::get('/grafik/detail', function (Request $request) {
 
-        $tahun = $request->tahun ? (int)$request->tahun : date('Y');
-        $bulan = $request->bulan;
+        $tahun = $request->tahun ? (int)$request->tahun : (int)date('Y');
+        $bulan = (int)$request->bulan;
 
         if (!$bulan) {
             return response()->json([]);
         }
 
-        return \App\Models\Pengajuan::with('user')
-            ->whereYear('created_at', $tahun)
-            ->whereMonth('created_at', $bulan)
+        $data = \App\Models\Pengajuan::with(['user', 'layanan'])
+            ->whereYear('tanggal_pengajuan', $tahun)
+            ->whereMonth('tanggal_pengajuan', $bulan)
             ->latest()
-            ->get();
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'nama' => $item->nama_pembeli ?? $item->nama_pemohon ?? $item->nama_penerima ?? $item->nama ?? '-',
+                    'layanan' => $item->layanan->nama_layanan ?? '-',
+                    'status' => $item->status,
+                    'progress' => $item->progress ?? 'Belum ada progress',
+                    'tanggal' => $item->tanggal_pengajuan ? date('d M Y', strtotime($item->tanggal_pengajuan)) : '-',
+                ];
+            });
+
+        return response()->json($data);
 
     })->name('admin.grafik.detail');
     

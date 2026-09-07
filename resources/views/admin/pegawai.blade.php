@@ -25,15 +25,22 @@
 
                 <tr class="border-b">
                     <td class="p-4">1</td>
-                    <td class="p-4">Budi</td>
-                    <td class="p-4">budi@gmail.com</td>
-                    <td class="p-4">Manager</td>
+                    <td class="p-4">Fitri Maulida</td>
+                    <td class="p-4">fitri@gmail.com</td>
+                    <td class="p-4">Admin</td>
                 </tr>
 
                 <tr>
                     <td class="p-4">2</td>
-                    <td class="p-4">Andi</td>
-                    <td class="p-4">andi@gmail.com</td>
+                    <td class="p-4">Zakiyyatush Sholihah</td>
+                    <td class="p-4">zakiyyatush@gmail.com</td>
+                    <td class="p-4">Staff</td>
+                </tr>
+
+                 <tr>
+                    <td class="p-4">2</td>
+                    <td class="p-4">ZMuttakin</td>
+                    <td class="p-4">muttakin@gmail.com</td>
                     <td class="p-4">Staff</td>
                 </tr>
 

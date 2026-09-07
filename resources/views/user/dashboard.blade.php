@@ -214,63 +214,98 @@
             <tr class="border-b hover:bg-gray-50">
 
                 <td class="p-5 font-medium">
-                    {{ $item->layanan }}
+                    {{ $item->layanan->nama_layanan ?? '-' }}
                 </td>
 
                 <td class="p-5">
 
-                    @if($item->status == 'pending')
+                     @if($item->status == 'pending')
 
-                        <span class="bg-yellow-100 text-yellow-700
-                                     px-4 py-2 rounded-full text-sm">
+            <span class="text-yellow-500 font-bold">
+                Menunggu Verifikasi
+            </span>
 
-                            Pending
+        @elseif($item->status == 'revisi')
 
-                        </span>
+            <span class="text-red-600 font-bold">
+                Berkas Belum Lengkap
+            </span>
 
-                    @elseif($item->status == 'diproses')
+            @if($item->catatan_admin)
+                <p class="text-sm text-red-500 mt-1">
+                    {{ $item->catatan_admin }}
+                </p>
+            @endif
 
-                        <span class="bg-blue-100 text-blue-700
-                                     px-4 py-2 rounded-full text-sm">
+            <a href="{{ route('user.pengajuan.edit', $item->id) }}"
+               class="inline-block mt-2 bg-yellow-500 text-white px-3 py-1 rounded">
+                Perbaiki Dokumen
+            </a>
 
-                            Diproses
+            @elseif($item->status == 'disetujui')
 
-                        </span>
+    <span class="text-green-600 font-bold">
+        Disetujui
+    </span>
 
-                    @else
+   @if($item->dokumen->isNotEmpty())
 
-                        <span class="bg-green-100 text-green-700
-                                     px-4 py-2 rounded-full text-sm">
+    <span class="inline-block mt-2 text-blue-600 font-semibold">
+        ✔ Dokumen sudah diupload
+    </span>
 
-                            Selesai
+@else
 
-                        </span>
+@endif
 
-                    @endif
+        @elseif($item->status == 'diproses')
 
-                </td>
+            <span class="text-blue-500 font-bold">
+                Sedang Diproses
+            </span>
 
-                <td class="p-5 text-gray-500">
-                    {{ $item->created_at->format('d M Y') }}
-                </td>
+        @elseif($item->status == 'selesai')
 
-                <td class="p-5">
+            <span class="text-green-600 font-bold">
+                Selesai
+            </span>
 
-                    @if($item->file_surat)
-                        <a href="{{ asset('storage/'.$item->file_surat) }}"
-                           target="_blank"
-                           class="text-blue-600 underline">
+        @else
 
-                            Download Surat
+            <span class="text-gray-500">-</span>
 
-                        </a>
-                    @else
-                        <span class="text-gray-400">
-                            Belum ada surat
-                        </span>
-                    @endif
+        @endif
 
 </td>
+
+ <td class="p-4">
+        {{ $item->tanggal_pengajuan
+            ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->format('d M Y')
+            : '-' }}
+    </td>
+
+     {{-- KOLOM SURAT --}}
+    <td class="p-4">
+
+        @if($item->file_surat)
+
+            <a href="{{ asset('storage/'.$item->file_surat) }}"
+               target="_blank"
+               class="text-blue-600 underline">
+
+                Download Surat
+
+            </a>
+
+        @else
+
+            <span class="text-gray-400">
+                Belum ada surat
+            </span>
+
+        @endif
+
+    </td>
 
             </tr>
 

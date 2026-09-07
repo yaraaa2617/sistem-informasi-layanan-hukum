@@ -113,7 +113,7 @@
                 </td>
 
                 <td class="p-4">
-                    {{ $item->user->name }}
+                    {{ $item->nama }}
                 </td>
 
                 <td class="p-4">
