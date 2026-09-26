@@ -215,52 +215,34 @@ public function storeAPHB(Request $request)
     |--------------------------------------------------------------------------
     */
 
-    public function index()
     public function index(Request $request)
-{
-    $pengajuan = Pengajuan::with([
-    'user',
-    'layanan'
-])->latest()->get();
-    $query = Pengajuan::with([
-        'user',
-        'layanan'
-    ])->latest();
+    {
+        $query = Pengajuan::with(['user', 'layanan'])->latest();
 
-    return view('admin.pengajuan', compact('pengajuan'));
-    if ($request->filled('tahun')) {
-        $query->whereYear('tanggal_pengajuan', $request->tahun);
+        if ($request->filled('tahun')) $query->whereYear('tanggal_pengajuan', $request->tahun);
+        if ($request->filled('bulan')) $query->whereMonth('tanggal_pengajuan', $request->bulan);
+        if ($request->filled('status')) $query->where('status', $request->status);
+
+        $pengajuan = $query->get();
+        $tahun = $request->tahun;
+        $bulan = $request->bulan;
+        $status = $request->status;
+
+        $listTahun = Pengajuan::whereNotNull('tanggal_pengajuan')
+            ->selectRaw('YEAR(tanggal_pengajuan) as tahun')
+            ->distinct()
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun')
+            ->toArray();
+
+        $currentYear = (int) date('Y');
+        if (!in_array($currentYear, $listTahun)) {
+            $listTahun[] = $currentYear;
+            rsort($listTahun);
+        }
+
+        return view('admin.pengajuan', compact('pengajuan', 'tahun', 'bulan', 'status', 'listTahun'));
     }
-
-    if ($request->filled('bulan')) {
-        $query->whereMonth('tanggal_pengajuan', $request->bulan);
-    }
-
-    if ($request->filled('status')) {
-        $query->where('status', $request->status);
-    }
-
-    $pengajuan = $query->get();
-    $tahun = $request->tahun;
-    $bulan = $request->bulan;
-    $status = $request->status;
-
-    // Ambil daftar tahun dari data tanggal_pengajuan
-    $listTahun = Pengajuan::whereNotNull('tanggal_pengajuan')
-        ->selectRaw('YEAR(tanggal_pengajuan) as tahun')
-        ->distinct()
-        ->orderBy('tahun', 'desc')
-        ->pluck('tahun')
-        ->toArray();
-
-    $currentYear = (int) date('Y');
-    if (!in_array($currentYear, $listTahun)) {
-        $listTahun[] = $currentYear;
-        rsort($listTahun);
-    }
-
-    return view('admin.pengajuan', compact('pengajuan', 'tahun', 'bulan', 'status', 'listTahun'));
-}
 
     public function updateStatus(Request $request, $id)
     {

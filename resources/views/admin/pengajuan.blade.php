@@ -2,9 +2,6 @@
 
 @section('content')
 
-<h1 class="text-3xl font-bold mb-8">
-    Data Pengajuan Klien
-</h1>
 {{-- HEADER --}}
 <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
     <div>
@@ -16,13 +13,11 @@
         </p>
     </div>
 
-<div class="bg-white border border-[#E5D3C1] rounded-2xl shadow overflow-hidden">
     <div class="bg-[#F8F1EA] text-[#6B3F2A] font-semibold px-4 py-2 rounded-xl text-sm self-start">
         {{ $pengajuan->count() }} Data Ditemukan
     </div>
 </div>
 
-    <table class="w-full">
 {{-- FORM FILTER TAHUN, BULAN, & STATUS --}}
 <div class="bg-white border border-[#E5D3C1] p-6 rounded-2xl shadow-sm mb-6">
     <form method="GET" action="{{ route('admin.pengajuan') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
@@ -42,15 +37,6 @@
             </select>
         </div>
 
-        <thead class="bg-gray-100">
-            <tr>
-            <th class="p-4 text-left">Nama Pemohon</th>
-            <th class="p-4 text-left">Layanan</th>
-            <th class="p-4 text-left">Status</th>
-            <th class="p-4 text-left">Progress</th>
-            <th class="p-4 text-left">Aksi</th>
-            </tr>
-        </thead>
         {{-- FILTER BULAN --}}
         <div>
             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
@@ -73,7 +59,6 @@
             </select>
         </div>
 
-        <tbody>
         {{-- FILTER STATUS --}}
         <div>
             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
@@ -90,56 +75,6 @@
             </select>
         </div>
 
-    @foreach($pengajuan as $item)
-
-    <tr class="border-b hover:bg-gray-50 transition">
-
-        <td class="p-4 font-medium">
-            {{ $item->nama }}
-        </td>
-
-        <td class="p-4">
-            {{ $item->layanan->nama_layanan ?? '-' }}
-        </td>
-
-        <td class="p-4">
-
-            @if($item->status == 'pending')
-
-                <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">
-                    Pending
-                </span>
-
-            @elseif($item->status == 'revisi')
-
-                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-semibold">
-                    Berkas Belum Lengkap
-                 </span>
-
-            @elseif($item->status == 'disetujui')
-
-                <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm font-semibold">
-                    Disetujui
-                 </span>
-
-            @elseif($item->status == 'diproses')
-
-                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
-                    Diproses
-                </span>
-
-            @elseif($item->status == 'selesai')
-
-                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
-                    Selesai
-                </span>
-
-            @elseif($item->status == 'dipanggil')
-
-                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
-                    Dipanggil
-                </span>
-
         {{-- TOMBOL FILTER & RESET --}}
         <div class="flex gap-2">
             <button type="submit" class="flex-1 bg-[#6B3F2A] hover:bg-[#4E342E] text-white p-3 rounded-xl font-semibold text-sm transition">
@@ -152,17 +87,14 @@
             @endif
         </div>
 
-        </td>
     </form>
 </div>
 
-        <td class="p-4">
 {{-- TABEL DATA PENGAJUAN --}}
 <div class="bg-white border border-[#E5D3C1] rounded-2xl shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full">
 
-            @if($item->progress)
             <thead class="bg-[#F8F1EA] text-[#6B3F2A]">
                 <tr>
                     <th class="p-4 text-left">No</th>
@@ -175,38 +107,26 @@
                 </tr>
             </thead>
 
-                @if(str_contains(strtolower($item->progress), 'upload'))
             <tbody>
                 @forelse($pengajuan as $item)
                 <tr class="border-b hover:bg-gray-50 transition">
 
-                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1">
-                        📤 {{ $item->progress }}
-                    </span>
                     <td class="p-4 text-gray-500">{{ $loop->iteration }}</td>
 
-                @elseif(str_contains(strtolower($item->progress), 'selesai'))
                     <td class="p-4 font-semibold text-gray-800">
                         {{ $item->nama_pembeli ?? $item->nama_pemohon ?? $item->nama_penerima ?? $item->nama ?? '-' }}
                     </td>
 
-                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1">
-                        ✔ {{ $item->progress }}
-                    </span>
                     <td class="p-4 text-gray-700">
                         {{ $item->layanan->nama_layanan ?? '-' }}
                     </td>
 
-                @elseif(str_contains(strtolower($item->progress), 'belum lengkap') || str_contains(strtolower($item->progress), 'revisi'))
                     <td class="p-4 text-sm font-medium text-gray-700 whitespace-nowrap">
                         {{ $item->tanggal_pengajuan
                             ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->format('d M Y')
                             : '-' }}
                     </td>
 
-                    <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1">
-                        ⚠️ {{ $item->progress }}
-                    </span>
                     <td class="p-4">
                         @if($item->status == 'pending')
                             <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
@@ -239,7 +159,6 @@
                         @endif
                     </td>
 
-                @else
                     <td class="p-4">
                         @if($item->progress)
                             @if(str_contains(strtolower($item->progress), 'upload'))
@@ -266,9 +185,6 @@
                         @endif
                     </td>
 
-                    <span class="bg-[#F8F1EA] text-[#6B3F2A] border border-[#E5D3C1] px-3 py-1 rounded-full text-xs font-semibold">
-                        {{ $item->progress }}
-                    </span>
                     <td class="p-4">
                         <a href="{{ route('admin.pengajuan.show', $item->id) }}"
                            class="bg-[#6B3F2A] hover:bg-[#4E342E] text-white px-4 py-2 rounded-xl text-xs font-semibold transition inline-block">
@@ -276,7 +192,6 @@
                         </a>
                     </td>
 
-                @endif
                 </tr>
                 @empty
                 <tr>
@@ -286,33 +201,6 @@
                 </tr>
                 @endforelse
             </tbody>
-
-            @else
-
-                <span class="text-gray-400 italic text-sm">
-                    Belum ada progress
-                </span>
-
-            @endif
-
-        </td>
-
-        <td class="p-4">
-            <a href="{{ route('admin.pengajuan.show', $item->id) }}"
-               class="bg-[#6B3F2A] hover:bg-[#4E342E] text-white px-4 py-2 rounded-xl transition">
-                Lihat
-            </a>
-
-            
-        </td>
-
-    </tr>
-
-    @endforeach
-
-</tbody>
-
-    </table>
 
         </table>
     </div>

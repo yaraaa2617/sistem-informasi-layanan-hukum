@@ -281,6 +281,14 @@ Route::middleware('auth')->group(function () {
         [NotarisController::class, 'show'])
         ->name('notaris.pengajuan.show');
 
+    Route::get('/notaris/laporan',
+        [NotarisController::class, 'laporan'])
+        ->name('notaris.laporan');
+
+    Route::get('/notaris/laporan/pdf',
+        [NotarisController::class, 'laporanPdf'])
+        ->name('notaris.laporan.pdf');
+
 });
 
 /*
@@ -355,18 +363,9 @@ Route::get('/admin', function () {
     )->name('admin.laporan.pdf');
 
     // Pengajuan User
-    Route::get('/admin/pengajuan', function () {
     Route::get('/admin/pengajuan',
         [PengajuanController::class, 'index']
     )->name('admin.pengajuan');
-
-        $pengajuan = \App\Models\Pengajuan::with('user')
-                        ->latest()
-                        ->get();
-
-        return view('admin.pengajuan', compact('pengajuan'));
-
-    })->name('admin.pengajuan');
 
     // Detail Pengajuan
     Route::get('/admin/pengajuan/{id}',

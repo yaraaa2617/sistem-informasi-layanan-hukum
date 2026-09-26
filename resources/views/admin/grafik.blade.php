@@ -2,13 +2,44 @@
 
 @section('content')
 
+@php
+    $totalSemua = $dataTahun->count();
+    $selesaiCount = $dataTahun->where('status', 'selesai')->count();
+    $diprosesCount = $dataTahun->where('status', 'diproses')->count();
+    $pendingCount = $dataTahun->whereIn('status', ['pending', 'revisi'])->count();
+    $disetujuiCount = $dataTahun->where('status', 'disetujui')->count();
+
+    $persenSelesai = $totalSemua > 0 ? round(($selesaiCount / $totalSemua) * 100, 1) : 0;
+    $persenDiproses = $totalSemua > 0 ? round(($diprosesCount / $totalSemua) * 100, 1) : 0;
+    $persenPending = $totalSemua > 0 ? round(($pendingCount / $totalSemua) * 100, 1) : 0;
+
+    // Bulan Puncak & Rata-rata
+    $namaBulanLengkap = [
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+    ];
+    $bulanTerbanyak = $perBulan->sortByDesc('total')->first();
+    $namaBulanPuncak = $bulanTerbanyak ? ($namaBulanLengkap[$bulanTerbanyak->bulan] ?? '-') : '-';
+    $jumlahBulanPuncak = $bulanTerbanyak ? $bulanTerbanyak->total : 0;
+
+    $jumlahBulanAktif = $perBulan->count();
+    $rataRataBulan = $jumlahBulanAktif > 0 ? round($totalSemua / $jumlahBulanAktif, 1) : 0;
+
+    // Layanan Terbanyak
+    $layananTerbanyakObj = $perLayanan->sortByDesc('total')->first();
+    $namaLayananDominan = $layananTerbanyakObj ? $layananTerbanyakObj->layanan : '-';
+    $jumlahLayananDominan = $layananTerbanyakObj ? $layananTerbanyakObj->total : 0;
+    $persenLayananDominan = $totalSemua > 0 ? round(($jumlahLayananDominan / $totalSemua) * 100, 1) : 0;
+@endphp
+
 <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
     <div>
         <h1 class="text-3xl font-bold text-[#6B3F2A]">
-            Dashboard Grafik Pengajuan
+            Dashboard Grafik & Analisis Data
         </h1>
         <p class="text-gray-500 mt-1">
-            Visualisasi statistik data permohonan layanan hukum dan tren bulanan
+            Visualisasi statistik permohonan layanan hukum, tren bulanan, dan kesimpulan eksekutif
         </p>
     </div>
 
@@ -20,33 +51,40 @@
                 class="bg-white border border-[#E5D3C1] text-[#6B3F2A] font-semibold rounded-xl px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6B3F2A]">
             @for($i = date('Y'); $i >= 2020; $i--)
                 <option value="{{ $i }}" {{ $tahun == $i ? 'selected' : '' }}>
-                    {{ $i }}
+                    Tahun {{ $i }}
                 </option>
             @endfor
         </select>
     </form>
 </div>
 
-<!-- STATISTIK RINGKASAN -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<!-- STATISTIK RINGKASAN ATAS -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
     <div class="bg-white border border-[#E5D3C1] rounded-2xl p-6 shadow-sm">
         <p class="text-sm font-semibold text-gray-500">Total Pengajuan ({{ $tahun }})</p>
         <h2 class="text-3xl font-bold text-[#6B3F2A] mt-2">
-            {{ $perBulan->sum('total') }} <span class="text-base font-normal text-gray-400">berkas</span>
+            {{ $totalSemua }} <span class="text-base font-normal text-gray-400">berkas</span>
         </h2>
     </div>
 
     <div class="bg-white border border-[#E5D3C1] rounded-2xl p-6 shadow-sm">
-        <p class="text-sm font-semibold text-gray-500">Jumlah Jenis Layanan</p>
-        <h2 class="text-3xl font-bold text-[#6B3F2A] mt-2">
-            {{ $perLayanan->count() }} <span class="text-base font-normal text-gray-400">layanan</span>
+        <p class="text-sm font-semibold text-gray-500">Akta Selesai</p>
+        <h2 class="text-3xl font-bold text-green-700 mt-2">
+            {{ $selesaiCount }} <span class="text-base font-normal text-gray-400">({{ $persenSelesai }}%)</span>
+        </h2>
+    </div>
+
+    <div class="bg-white border border-[#E5D3C1] rounded-2xl p-6 shadow-sm">
+        <p class="text-sm font-semibold text-gray-500">Sedang Diproses</p>
+        <h2 class="text-3xl font-bold text-blue-700 mt-2">
+            {{ $diprosesCount }} <span class="text-base font-normal text-gray-400">berkas</span>
         </h2>
     </div>
 
     <div class="bg-white border border-[#E5D3C1] rounded-2xl p-6 shadow-sm">
         <p class="text-sm font-semibold text-gray-500">Layanan Terbanyak</p>
-        <h2 class="text-xl font-bold text-[#6B3F2A] mt-2 truncate">
-            {{ $perLayanan->sortByDesc('total')->first()->layanan ?? '-' }}
+        <h2 class="text-lg font-bold text-[#6B3F2A] mt-2 truncate" title="{{ $namaLayananDominan }}">
+            {{ $namaLayananDominan }}
         </h2>
     </div>
 </div>
@@ -90,6 +128,137 @@
         </div>
     </div>
 
+</div>
+
+<!-- KESIMPULAN & RINGKASAN HASIL GRAFIK -->
+<div class="bg-white border border-[#E5D3C1] rounded-2xl p-6 lg:p-8 shadow-sm mb-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between pb-4 mb-6 border-b border-[#E5D3C1] gap-2">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">📋</span>
+                <h2 class="text-xl font-bold text-[#6B3F2A]">
+                    Kesimpulan & Ringkasan Hasil Grafik (Tahun {{ $tahun }})
+                </h2>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">
+                Rangkuman poin utama dan analisis hasil visualisasi data agar mudah dipahami secara menyeluruh
+            </p>
+        </div>
+        <span class="bg-[#F8F1EA] text-[#6B3F2A] text-xs font-bold px-3 py-1.5 rounded-xl border border-[#E5D3C1] self-start">
+            Analisis Eksekutif
+        </span>
+    </div>
+
+    <!-- 4 KARTU INDIKATOR UTAMA -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        
+        <div class="bg-[#F8F5F2] border border-[#E5D3C1] p-4 rounded-2xl">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Bulan Puncak</span>
+                <span class="text-base">📈</span>
+            </div>
+            <h4 class="text-lg font-bold text-[#6B3F2A] mt-1">{{ $namaBulanPuncak }}</h4>
+            <p class="text-xs text-gray-600 mt-0.5">
+                Sebanyak <span class="font-bold text-[#6B3F2A]">{{ $jumlahBulanPuncak }} permohonan</span> diajukan
+            </p>
+        </div>
+
+        <div class="bg-[#F8F5F2] border border-[#E5D3C1] p-4 rounded-2xl">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Layanan Dominan</span>
+                <span class="text-base">🏆</span>
+            </div>
+            <h4 class="text-lg font-bold text-[#6B3F2A] mt-1 truncate" title="{{ $namaLayananDominan }}">{{ $namaLayananDominan }}</h4>
+            <p class="text-xs text-gray-600 mt-0.5">
+                <span class="font-bold text-[#6B3F2A]">{{ $jumlahLayananDominan }} berkas</span> ({{ $persenLayananDominan }}% dari total)
+            </p>
+        </div>
+
+        <div class="bg-[#F8F5F2] border border-[#E5D3C1] p-4 rounded-2xl">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Rasio Selesai</span>
+                <span class="text-base">🎯</span>
+            </div>
+            <h4 class="text-lg font-bold text-green-700 mt-1">{{ $persenSelesai }}% Tuntas</h4>
+            <p class="text-xs text-gray-600 mt-0.5">
+                <span class="font-bold text-green-700">{{ $selesaiCount }} dari {{ $totalSemua }}</span> akta diterbitkan
+            </p>
+        </div>
+
+        <div class="bg-[#F8F5F2] border border-[#E5D3C1] p-4 rounded-2xl">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Rata-rata Bulanan</span>
+                <span class="text-base">⏱️</span>
+            </div>
+            <h4 class="text-lg font-bold text-[#6B3F2A] mt-1">{{ $rataRataBulan }} Berkas/Bln</h4>
+            <p class="text-xs text-gray-600 mt-0.5">
+                Dari <span class="font-bold text-[#6B3F2A]">{{ $jumlahBulanAktif }} bulan</span> yang aktif
+            </p>
+        </div>
+
+    </div>
+
+    <!-- POIN-POIN KESIMPULAN NARATIF -->
+    <div class="bg-[#FAF7F5] border border-[#E5D3C1] rounded-2xl p-5">
+        <h4 class="font-bold text-[#6B3F2A] text-sm mb-3 flex items-center gap-2">
+            <span>💡</span> Poin-Poin Utama & Kesimpulan Hasil Visualisasi:
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-700">
+            
+            <div class="bg-white p-4 rounded-xl border border-[#E5D3C1] shadow-2xs">
+                <div class="font-bold text-gray-800 mb-1 flex items-center gap-1.5">
+                    <span class="text-blue-600">●</span> 1. Tren dan Volume Permohonan
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                    @if($totalSemua > 0)
+                        Total permohonan masuk pada tahun {{ $tahun }} tercatat sebanyak <strong>{{ $totalSemua }} berkas</strong>. Permohonan mencapai volume tertinggi pada bulan <strong>{{ $namaBulanPuncak }} ({{ $jumlahBulanPuncak }} berkas)</strong>, dengan rata-rata kecepatan berkas masuk sebesar <strong>{{ $rataRataBulan }} permohonan/bulan</strong>.
+                    @else
+                        Belum ada permohonan berkas yang masuk pada tahun {{ $tahun }}.
+                    @endif
+                </p>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-[#E5D3C1] shadow-2xs">
+                <div class="font-bold text-gray-800 mb-1 flex items-center gap-1.5">
+                    <span class="text-amber-600">●</span> 2. Preferensi Layanan Hukum Terbanyak
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                    @if($totalSemua > 0)
+                        Kebutuhan masyarakat paling terkonsentrasi pada layanan <strong>{{ $namaLayananDominan }}</strong> yang menyumbang <strong>{{ $persenLayananDominan }}%</strong> dari keseluruhan permohonan ({{ $jumlahLayananDominan }} berkas), menjadikannya fokus operasional utama kantor.
+                    @else
+                        Data distribusi layanan belum tersedia untuk tahun {{ $tahun }}.
+                    @endif
+                </p>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-[#E5D3C1] shadow-2xs">
+                <div class="font-bold text-gray-800 mb-1 flex items-center gap-1.5">
+                    <span class="text-green-600">●</span> 3. Kinerja & Efektivitas Penyelesaian
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                    @if($totalSemua > 0)
+                        Sebanyak <strong>{{ $selesaiCount }} berkas ({{ $persenSelesai }}%)</strong> telah berhasil diselesaikan secara tuntas hingga terbit akta resmi. Sebanyak <strong>{{ $diprosesCount }} berkas ({{ $persenDiproses }}%)</strong> berada dalam tahap pengerjaan & tanda tangan para pihak.
+                    @else
+                        Rasio efektivitas penyelesaian akan dihitung saat berkas mulai diajukan.
+                    @endif
+                </p>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-[#E5D3C1] shadow-2xs">
+                <div class="font-bold text-gray-800 mb-1 flex items-center gap-1.5">
+                    <span class="text-purple-600">●</span> 4. Catatan Evaluasi & Tindak Lanjut
+                </div>
+                <p class="text-gray-600 leading-relaxed">
+                    @if($pendingCount > 0)
+                        Masih terdapat <strong>{{ $pendingCount }} berkas</strong> yang berstatus menunggu verifikasi atau perlu perbaikan dokumen persyaratan (revisi). Disarankan admin segera menindaklanjuti komunikasi kepada pihak klien.
+                    @else
+                        Seluruh berkas yang masuk telah tertangani dengan baik dan tidak ada berkas yang tertahan pada status verifikasi awal/revisi.
+                    @endif
+                </p>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <!-- DETAIL DATA -->
@@ -182,7 +351,7 @@
                 @empty
                 <tr>
                     <td colspan="6" class="p-8 text-center text-gray-400 italic">
-                        Belum ada data pengajuan pada tahun {{ $tahun }}
+                        Belum ada data pengajuan pada tahun {{ $tahun }}.
                     </td>
                 </tr>
                 @endforelse
@@ -191,9 +360,8 @@
     </div>
 </div>
 
-<!-- CHART.JS -->
+<!-- SCRIPT CHART.JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const rawPerBulan = @json($perBulan);

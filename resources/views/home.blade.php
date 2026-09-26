@@ -86,8 +86,9 @@
 
         <div>
 
-            <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1974"
-                 class="rounded-3xl shadow-2xl">
+            <img src="{{ asset('images/kantor-notaris.jpg') }}"
+                 alt="Kantor Notaris & PPAT Muhammad Baiquni Haqqi, S.H."
+                 class="rounded-3xl shadow-2xl w-full h-[400px] object-cover">
 
         </div>
 

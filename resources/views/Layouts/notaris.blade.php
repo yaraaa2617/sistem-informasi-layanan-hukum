@@ -28,8 +28,13 @@
             </a>
 
             <a href="{{ route('notaris.pengajuan') }}"
-               class="block px-6 py-3 hover:bg-[#A77F60]">
+               class="block px-6 py-3 hover:bg-[#A77F60] {{ request()->routeIs('notaris.pengajuan*') ? 'bg-[#A77F60] font-semibold' : '' }}">
                 Pengajuan
+            </a>
+
+            <a href="{{ route('notaris.laporan') }}"
+               class="block px-6 py-3 hover:bg-[#A77F60] {{ request()->routeIs('notaris.laporan*') ? 'bg-[#A77F60] font-semibold' : '' }}">
+                Laporan
             </a>
 
 
