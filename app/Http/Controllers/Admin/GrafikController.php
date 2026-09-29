@@ -8,11 +8,13 @@ use Illuminate\Http\Request;
 
 class GrafikController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $tahun = $request->tahun ? (int)$request->tahun : (int)date('Y');
+
         // 📅 PER BULAN
         $perBulan = Pengajuan::selectRaw('MONTH(tanggal_pengajuan) as bulan, COUNT(*) as total')
-            ->whereYear('tanggal_pengajuan', date('Y'))
+            ->whereYear('tanggal_pengajuan', $tahun)
             ->groupBy('bulan')
             ->orderBy('bulan')
             ->get();
@@ -20,10 +22,15 @@ class GrafikController extends Controller
         // 🧾 PER LAYANAN
         $perLayanan = Pengajuan::join('layanans', 'pengajuan.layanan_id', '=', 'layanans.id')
             ->selectRaw('layanans.nama_layanan as layanan, COUNT(pengajuan.id) as total')
-            ->whereYear('pengajuan.tanggal_pengajuan', date('Y'))
+            ->whereYear('pengajuan.tanggal_pengajuan', $tahun)
             ->groupBy('layanans.id', 'layanans.nama_layanan')
             ->get();
 
-        return view('admin.grafik', compact('perBulan', 'perLayanan'));
+        $dataTahun = Pengajuan::with(['user', 'layanan'])
+            ->whereYear('tanggal_pengajuan', $tahun)
+            ->latest()
+            ->get();
+
+        return view('admin.grafik', compact('perBulan', 'perLayanan', 'tahun', 'dataTahun'));
     }
 }
